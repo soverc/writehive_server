@@ -1,0 +1,346 @@
+#!/usr/bin/perl
+
+######################################################################################
+#	mpBBCode v1.2																	 #
+#																					 #
+#   mpBBCode is a small Perl PAckage that converts HTML to BBCode to ensure data 	 #
+#	validity and database security.								     				 #
+# 																					 #
+#   Copyright (C) 2010  Travis Brown (http://www.travismbrown.com)					 #
+#																					 #
+#   This program is free software: you can redistribute it and/or modify			 #
+#   it under the terms of the GNU General Public License as published by			 #
+#   the Free Software Foundation, either version 3 of the License, or				 #
+#   (at your option) any later version.												 #
+#																					 #
+#   This program is distributed in the hope that it will be useful,					 #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of					 #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the					 #
+#   GNU General Public License for more details.									 #
+#																					 #
+#   You should have received a copy of the GNU General Public License				 #
+#   along with this program.  If not, see http://www.gnu.org/licenses.			 	 #
+######################################################################################
+
+# Package Name
+package mpBBCode;
+
+sub new
+{
+	my($_class) = shift;
+	my($_self)  = bless({}, $_class);
+		return($_self);
+}
+
+sub encode
+{
+	my($_self, $_data) = @_;
+	my(%_excludes)     = (
+		'\<address'        => '[:address::]',
+		'\<applet'         => '[:applet::]',
+		'\<area'           => '[:area::]', 
+		'\<a'              => '[:a::]',
+		'\<base'           => '[:base::]',
+		'\<basefont'       => '[:basefont::]',
+		'\<big'            => '[:big::]',
+		'\<blockquote'     => '[:blockquote::]',
+		'\<body'           => '[:body::]',
+		'\<br([^<>]*)\>'   => '[:br:]',
+		'\<b'              => '[:b::]',
+		'\<caption'        => '[:caption::]',
+		'\<center'         => '[:center::]',
+		'\<cite'           => '[:cite::]',
+		'\<code'           => '[:code::]',
+		'\<dd'             => '[:dd::]',
+		'\<dfn'            => '[:dfn::]',
+		'\<dir'            => '[:dir::]',
+		'\<div'            => '[:div::]',
+		'\<dl'             => '[:dl::]',
+		'\<dt'             => '[:dt::]',
+		'\<em'             => '[:em::]',
+		'\<font'           => '[:font::]',
+		'\<form'           => '[:form::]',
+		'\<h1'             => '[:h1::]',
+		'\<h2'             => '[:h2::]',
+		'\<h3'             => '[:h3::]',
+		'\<h4'             => '[:h4::]',
+		'\<h5'             => '[:h5::]',
+		'\<h6'             => '[:h6::]',
+		'\<head'           => '[:head::]',
+		'\<hr([^<>]*)\>'   => '[:hr:]',
+		'\<html'           => '[:html::]',
+		'\<img'            => '[:img::]',
+		'\<input'          => '[:input::]',
+		'\<isindex'        => '[:isindex::]',
+		'\<i'              => '[:i::]',
+		'\<kbd'            => '[:kbd::]',
+		'\<link'           => '[:link::]',
+		'\<li'             => '[:li::]',
+		'\<map'            => '[:map::]',
+		'\<menu'           => '[:menu::]',
+		'\<meta'           => '[:meta::]',
+		'\<ol'             => '[:ol::]',
+		'\<option'         => '[:option::]',
+		'\<param'          => '[:param::]',
+		'\<pre'            => '[:pre::]',
+		'\<p'              => '[:p::]',
+		'\<samp'           => '[:samp::]',
+		'\<script'         => '[:script::]',
+		'\<select'         => '[:select::]',
+		'\<small'          => '[:small::]',
+		'\<strike'         => '[:strike::]',
+		'\<strong'         => '[:strong::]',
+		'\<style'          => '[:style::]',
+		'\<sub'            => '[:sub::]',
+		'\<sup'            => '[:sup::]',
+		'\<table'          => '[:table::]',
+		'\<tbody'          => '[:tbody::]',
+		'\<td'             => '[:td::]',
+		'\<textarea'       => '[:textarea::]',
+		'\<tfoot'          => '[:tfoot::]',
+		'\<th'             => '[:th::]',
+		'\<thead'          => '[:thead::]',
+		'\<title'          => '[:title::]',
+		'\<tr'             => '[:tr::]',
+		'\<tt'             => '[:tt::]',
+		'\<ul'             => '[:ul::]',
+		'\<u'              => '[:u::]',
+		'\<var'            => '[:var::]',
+		'\<\/address\>'    => '[::address:]',
+		'\<\/applet\>'     => '[::applet:]',
+		'\<\/area\>'       => '[::area:]', 
+		'\<\/a\>'          => '[::a:]',
+		'\<\/base\>'       => '[::base:]',
+		'\<\/basefont\>'   => '[::basefont:]',
+		'\<\/big\>'        => '[::big:]',
+		'\<\/blockquote\>' => '[::blockquote:]',
+		'\<\/body\>'       => '[::body:]',
+		'\<\/b\>'          => '[::b:]',
+		'\<\/caption\>'    => '[::caption:]',
+		'\<\/center\>'     => '[::center:]',
+		'\<\/cite\>'       => '[::cite:]',
+		'\<\/code\>'       => '[::code:]',
+		'\<\/dd\>'         => '[::dd:]',
+		'\<\/dfn\>'        => '[::dfn:]',
+		'\<\/dir\>'        => '[::dir:]',
+		'\<\/div\>'        => '[::div:]',
+		'\<\/dl\>'         => '[::dl:]',
+		'\<\/dt\>'         => '[::dt:]',
+		'\<\/em\>'         => '[::em:]',
+		'\<\/font\>'       => '[::font:]',
+		'\<\/form\>'       => '[::form:]',
+		'\<\/h1\>'         => '[::h1:]',
+		'\<\/h2\>'         => '[::h2:]',
+		'\<\/h3\>'         => '[::h3:]',
+		'\<\/h4\>'         => '[::h4:]',
+		'\<\/h5\>'         => '[::h5:]',
+		'\<\/h6\>'         => '[::h6:]',
+		'\<\/head\>'       => '[::head:]',
+		'\<\/html\>'       => '[::html:]',
+		'\<\/img\>'        => '[::img:]',
+		'\<\/input\>'      => '[::input:]',
+		'\<\/isindex\>'    => '[::isindex:]',
+		'\<\/i\>'          => '[::i:]',
+		'\<\/kbd\>'        => '[::kbd:]',
+		'\<\/link\>'       => '[::link:]',
+		'\<\/li\>'         => '[::li:]',
+		'\<\/map\>'        => '[::map:]',
+		'\<\/menu\>'       => '[::menu:]',
+		'\<\/meta\>'       => '[::meta:]',
+		'\<\/ol\>'         => '[::ol:]',
+		'\<\/option\>'     => '[::option:]',
+		'\<\/param\>'      => '[::param:]',
+		'\<\/pre\>'        => '[::pre:]',
+		'\<\/p\>'          => '[::p:]',
+		'\<\/samp\>'       => '[::samp:]',
+		'\<\/script\>'     => '[::script:]',
+		'\<\/select\>'     => '[::select:]',
+		'\<\/small\>'      => '[::small:]',
+		'\<\/strike\>'     => '[::strike:]',
+		'\<\/strong\>'     => '[::strong:]',
+		'\<\/style\>'      => '[::style:]',
+		'\<\/sub\>'        => '[::sub:]',
+		'\<\/sup\>'        => '[::sup:]',
+		'\<\/table\>'      => '[::table:]',
+		'\<\/tbody\>'      => '[::tbody:]',
+		'\'<\/td\>'        => '[::td:]',
+		'\<\/textarea\>'   => '[::textarea:]',
+		'\<\/tfoot\>'      => '[::tfoot:]',
+		'\<\/th\>'         => '[::th:]',
+		'\<\/thead\>'      => '[::thead:]',
+		'\<\/title\>'      => '[::title:]',
+		'\<\/tr\>'         => '[::tr:]',
+		'\<\/tt\>'         => '[::tt:]',
+		'\<\/ul\>'         => '[::ul:]',
+		'/<\/u\>'          => '[::u:]',
+		'\<\/var\>'        => '[::var:]',
+	    '\<'               => '[:lesser:]',
+	    '\>'               => '[:greater:]'
+	);
+	
+	# Replace HTML Tags
+	while(my($_k, $_v) = each(%_excludes)) {
+		$_data =~ s/$_k/$_v/gi;
+	}
+	
+	# Return the new string
+	return($_data);
+}
+
+sub decode
+{
+	my($_self, $_data) = @_;
+	my(%_excludes)     = (
+		'\[:address::\]'    => '<address',
+		'\[:applet::\]'     => '<applet',
+		'\[:area::\]'       => '<area', 
+		'\[:a::\]'          => '<a',
+		'\[:base::\]'       => '<base',
+		'\[:basefont::\]'   => '<basefont',
+		'\[:big::\]'        => '<big',
+		'\[:blockquote::\]' => '<blockquote',
+		'\[:body::\]'       => '<body',
+		'\[:br:\]'          => '<br \/>',
+		'\[:b::\]'          => '<b',
+		'\[:caption::\]'    => '<caption',
+		'\[:center::\]'     => '<center',
+		'\[:cite::\]'       => '<cite',
+		'\[:code::\]'       => '<code',
+		'\[:dd::\]'         => '<dd',
+		'\[:dfn::\]'        => '<dfn',
+		'\[:dir::\]'        => '<dir',
+		'\[:div::\]'        => '<div',
+		'\[:dl::\]'         => '<dl',
+		'\[:dt::\]'         => '<dt',
+		'\[:em::\]'         => '<em',
+		'\[:font::\]'       => '<font',
+		'\[:form::\]'       => '<form',
+		'\[:h1::\]'         => '<h1',
+		'\[:h2::\]'         => '<h2',
+		'\[:h3::\]'         => '<h3',
+		'\[:h4::\]'         => '<h4',
+		'\[:h5::\]'         => '<h5',
+		'\[:h6::\]'         => '<h6',
+		'\[:head::\]'       => '<head',
+		'\[:hr:\]'          => '<hr \/>',
+		'\[:html::\]'       => '<html',
+		'\[:img::\]'        => '<img',
+		'\[:input::\]'      => '<input',
+		'\[:isindex::\]'    => '<isindex',
+		'\[:i::\]'          => '<i',
+		'\[:kbd::\]'        => '<kbd',
+		'\[:link::\]'       => '<link',
+		'\[:li::\]'         => '<li',
+		'\[:map::\]'        => '<map',
+		'\[:menu::\]'       => '<menu',
+		'\[:meta::\]'       => '<meta',
+		'\[:ol::\]'         => '<ol',
+		'\[:option::\]'     => '<option',
+		'\[:param::\]'      => '<param',
+		'\[:pre::\]'        => '<pre',
+		'\[:p::\]'          => '<p',
+		'\[:samp::\]'       => '<samp',
+		'\[:script::\]'     => '<script',
+		'\[:select::\]'     => '<select',
+		'\[:small::\]'      => '<small',
+		'\[:strike::\]'     => '<strike',
+		'\[:strong::\]'     => '<strong',
+		'\[:style::\]'      => '<style',
+		'\[:sub::\]'        => '<sub',
+		'\[:sup::\]'        => '<sup',
+		'\[:table::\]'      => '<table',
+		'\[:tbody::\]'      => '<tbody',
+		'\[:td::\]'         => '<td',
+		'\[:textarea::]'    => '<textarea',
+		'\[:tfoot::]'       => '<tfoot',
+		'\[:th::]'          => '<th',
+		'\[:thead::\]'      => '<thead',
+		'\[:title::\]'      => '<title',
+		'\[:tr::\]'         => '<tr',
+		'\[:tt::\]'         => '<tt',
+		'\[:ul::\]'         => '<ul',
+		'\[:u::\]'          => '<u',
+		'\[:var::\]'        => '<var',		
+		'\[::address:\]'    => '<\/address>',
+		'\[::applet:\]'     => '<\/applet>',
+		'\[::area:\]'       => '<\/area>', 
+		'\[::a:\]'          => '</a>',
+		'\[::base:\]'       => '</base>',
+		'\[::basefont:\]'   => '</basefont>',
+		'\[::big:\]'        => '</big>',
+		'\[::blockquote:\]' => '</blockquote>',
+		'\[::body:\]'       => '</body>',
+		'\[::b:\]'          => '</b>',
+		'\[::caption:\]'    => '</caption>',
+		'\[::center:\]'     => '</center>',
+		'\[::cite:\]'       => '</cite>',
+		'\[::code:\]'       => '</code>',
+		'\[::dd:\]'         => '</dd>',
+		'\[::dfn:\]'        => '</dfn>',
+		'\[::dir:\]'        => '</dir>',
+		'\[::div:\]'        => '</div>',
+		'\[::dl:\]'         => '</dl>',
+		'\[::dt:\]'         => '</dt>',
+		'\[::em:\]'         => '</em>',
+		'\[::font:\]'       => '</font>',
+		'\[::form:\]'       => '</form>',
+		'\[::h1:\]'         => '</h1>',
+		'\[::h2:\]'         => '</h2>',
+		'\[::h3:\]'         => '</h3>',
+		'\[::h4:\]'         => '</h4>',
+		'\[::h5:\]'         => '</h5>',
+		'\[::h6:\]'         => '</h6>',
+		'\[::head:\]'       => '<head>',
+		'\[::html:\]'       => '</html>',
+		'\[::img:\]'        => '</img>',
+		'\[::input:\]'      => '</input>',
+		'\[::isindex:\]'    => '</isindex>',
+		'\[::i:\]'          => '</i>',
+		'\[::kbd:\]'        => '</kbd>',
+		'\[::link:\]'       => '</link>',
+		'\[::li:\]'         => '</li>',
+		'\[::map:\]'        => '</map>',
+		'\[::menu:\]'       => '</menu>',
+		'\[::meta:\]'       => '</meta>',
+		'\[::ol:\]'         => '</ol>',
+		'\[::option:\]'     => '</option>',
+		'\[::param:\]'      => '</param>',
+		'\[::pre:\]'        => '</pre>',
+		'\[::p:\]'          => '</p>',
+		'\[::samp:\]'       => '</samp>',
+		'\[::script:\]'     => '</script>',
+		'\[::select:\]'     => '</select>',
+		'\[::small:\]'      => '</small>',
+		'\[::strike:\]'     => '</strike>',
+		'\[::strong:\]'     => '</strong>',
+		'\[::style:\]'      => '</style>',
+		'\[::sub:\]'        => '</sub>',
+		'\[::sup:\]'        => '</sup>',
+		'\[::table:\]'      => '</table>',
+		'\[::tbody:\]'      => '</tbody>',
+		'\[::td:\]'         => '</td>',
+		'\[::textarea:\]'   => '</textarea>',
+		'\[::tfoot:\]'      => '</tfoot>',
+		'\[::th:\]'         => '</th>',
+		'\[::thead:\]'      => '</thead>',
+		'\[::title:\]'      => '</title>',
+		'\[::tr:\]'         => '</tr>',
+		'\[::tt:\]'         => '</tt>',
+		'\[::ul:\]'         => '</ul>',
+		'\[::u:\]'          => '<u>',
+		'\[::var:\]'        => '</var>',
+	    '\[:lesser:\]'      => '<',
+	    '\[:greater:\]'     => '>'
+	);
+	
+	# Re-Code the HTML
+	while (my($_k, $_v) = each(%_excludes)) {
+		$_data =~ s/$_k/$_v/gi;
+	}
+	
+	# Return the new data
+	return($_data);
+}
+
+# Return Class Status
+1;

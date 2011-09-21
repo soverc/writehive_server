@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /feeds
+
+RewriteRule ^/?json(rpc)?/?$ jsonrpc.php
+RewriteRule ^/?xml(rpc)?/?$ xmlrpc.php
