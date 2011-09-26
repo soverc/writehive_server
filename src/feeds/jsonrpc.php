@@ -26,9 +26,10 @@ if(!include_once( implode(DIRECTORY_SEPARATOR, array( dirname(dirname(__FILE__))
 		
 		# Logon Method
 		case 'logon' : 
+
 			$_user = $_mp->login($_data->username, $_data->passwd);
 			
-			if ($_user->id) {
+			if ($_user->user_id) {
 				unset($_user->passwd);
 					$_response = $_user;
 			} else {

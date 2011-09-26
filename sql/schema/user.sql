@@ -4,8 +4,9 @@
 
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(255) unsigned NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `user` (
+--  `id` int(255) unsigned NOT NULL auto_increment,
+  `user_id` CHAR(37) NOT NULL default '',
   `display_name` varchar(50) default NULL,
   `passwd` varchar(50) default NULL,
   `first_name` varchar(45) default NULL,
@@ -35,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `facebook` varchar(250) default NULL,
   `twitter` varchar(250) default NULL,
   `linkedin` varchar(250) default NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY  (`user_id`),
   UNIQUE KEY `display_name` (`display_name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1734 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;

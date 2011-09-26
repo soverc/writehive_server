@@ -12,7 +12,7 @@ ini_set('date.timezone', 'America/New_York');
 		
 		public function valid_api_key($_key)
 		{
-			$_user = $this->_dbx->query("SELECT id FROM users WHERE account_key = '".strip_tags($_key)."'");
+			$_user = $this->_dbx->query("SELECT id FROM `user` WHERE account_key = '".$this->__sanitize($_key)."'");
 			$_user = $_user->fetch_object();
 			
 			if ($_user->id) {
@@ -62,18 +62,21 @@ ini_set('date.timezone', 'America/New_York');
 		
 		public function login($_username, $_password)
 		{
-			$_user = $this->_dbx->query("SELECT * FROM users WHERE display_name = '{$this->__sanitize($_username)}' AND passwd = PASSWORD('{$this->__sanitize($_password)}')");
+			$_user = $this->_dbx->query("SELECT * FROM `user` WHERE display_name = '{$this->__sanitize($_username)}' AND passwd = PASSWORD('{$this->__sanitize($_password)}')");
 			$_user = $_user->fetch_object();
+			if (!is_object($_user)) {
+				return FALSE;
+			}
 			
-			if ($_user->id) {
-				return($_user);
+			if ($_user->user_id) {
+				return $_user;
 			} else {
-				return(false);
+				return FALSE;
 			}
 		}
 
 		public function api_login($_key) {
-			$_user = $this->_dbx->query("SELECT * FROM users WHERE account_key = '{$this->__sanitize($_key)}'");
+			$_user = $this->_dbx->query("SELECT * FROM `user` WHERE account_key = '{$this->__sanitize($_key)}'");
 			$_user = $_user->fetch_object();
 
 			if ($_user->id) { 
@@ -85,7 +88,7 @@ ini_set('date.timezone', 'America/New_York');
 		
 		public function fetch_user($_id)
 		{
-			$_user = $this->_dbx->query("SELECT * FROM users WHERE id = {$this->__sanitize($_id)}");
+			$_user = $this->_dbx->query("SELECT * FROM `user` WHERE id = {$this->__sanitize($_id)}");
 			$_user = $_user->fetch_object();
 			
 			if ($_user->id) {
@@ -102,7 +105,7 @@ ini_set('date.timezone', 'America/New_York');
 			$_q       .= "FROM `article` a INNER JOIN categories c ON (c.id = a.category_id) ";
             $_q       .= "LEFT JOIN categories d ON (d.id = a.secondcategory_id) ";
 			$_q       .= "LEFT JOIN subcategories s ON (s.id = a.subcategory_id) ";
-			$_q       .= "INNER JOIN users u ON (u.id = a.author_id) WHERE ";
+			$_q       .= "INNER JOIN `user` u ON (u.id = a.author_id) WHERE ";
 			$_q       .= "a.title LIKE '%{$this->__sanitize($_query['criteria'])}%' OR a.content LIKE '%{$this->__sanitize($_query['criteria'])}%' ";
 			$_q       .= "OR a.description LIKE '%{$this->__sanitize($_query['criteria'])}%' OR ";
 			$_q       .= "a.tag_words LIKE ".((isset($_query['tag_words'])) ? "'%{$this->__sanitize($_query['tag_words'])}%'" : "'%{$this->__sanitize($_query['criteria'])}%'");
@@ -161,7 +164,7 @@ ini_set('date.timezone', 'America/New_York');
 			c.label AS cat_label, 
 			d.label AS secondcat_label, s.label as subcat_label, e.label AS secondsubcat_label 
 			FROM `article` AS a 
-			INNER JOIN users AS u ON (u.id = a.author_id) 
+			INNER JOIN `user` AS u ON (u.id = a.author_id) 
 			INNER JOIN categories AS c ON (c.id = a.category_id) 
 			LEFT JOIN categories AS d ON (d.id = a.secondcategory_id) 
 			LEFT JOIN subcategories AS s ON (s.id = a.subcategory_id) 
@@ -172,7 +175,6 @@ ini_set('date.timezone', 'America/New_York');
 			$_article               = $_result->fetch_object();
 			$_article->content      = $this->__secure_desanitize($_article->content);
 			$_article->comments     = $this->__article_comments($_article->article_id);
-			file_put_contents("/tmp/foo.log", print_r($_article, 1));
 			$_article->syndications = $this->__article_syndications($_article->article_id);
 			$_article->purchases    = $this->__article_purchases($_article->article_id);
 			$_article->views        = $this->__article_views($_article->article_id);
@@ -267,7 +269,7 @@ ini_set('date.timezone', 'America/New_York');
 		
 		public function article_increment_syndications($_article, $_user)
 		{	
-			if ($this->_dbx->query("INSERT INTO syndicated (uid, aid, syndicated) VALUES ('".strip_tags($_user)."', '".strip_tags($_article)."', NOW())")) {
+			if ($this->_dbx->query("INSERT INTO `syndicated` (uid, aid, syndicated) VALUES ('".$this->__sanitize($_user)."', '".$this->__sanitize($_article)."', NOW())")) {
 				return(true);
 			} else {
 				return(false);
@@ -370,28 +372,28 @@ ini_set('date.timezone', 'America/New_York');
 		
 		private function __article_comments($_article)
 		{
-			$_comments = $this->_dbx->query("SELECT COUNT(id) AS comment_count FROM comments WHERE article_id = '".strip_tags($_article)."'");
+			$_comments = $this->_dbx->query("SELECT COUNT(id) AS comment_count FROM comments WHERE article_id = '".$this->__sanitize($_article)."'");
 			$_comments = $_comments->fetch_object();
 				return($_comments->comment_count);
 		}
 		
 		private function __article_syndications($_article)
 		{
-			$_syndications = $this->_dbx->query("SELECT COUNT(aid) AS syndication_count FROM syndicated WHERE aid = '".strip_tags($_article)."'");
+			$_syndications = $this->_dbx->query("SELECT COUNT(aid) AS syndication_count FROM syndicated WHERE aid = '".$this->__sanitize($_article)."'");
 			$_syndications = $_syndications->fetch_object();
 				return($_syndications->syndication_count);
 		}
 		
 		private function  __article_purchases($_article)
 		{
-			$_purchases = $this->_dbx->query("SELECT COUNT(article_id) AS purchase_count FROM invoices WHERE article_id = '".strip_tags($_article)."'");
+			$_purchases = $this->_dbx->query("SELECT COUNT(article_id) AS purchase_count FROM invoices WHERE article_id = '".$this->__sanitize($_article)."'");
 			$_purchases = $_purchases->fetch_object();  
 				return($_purchases->purchase_count);
 		}
 		
 		private function __article_views($_article)
 		{
-			$_views = $this->_dbx->query("SELECT COUNT(entity_id) AS view_count FROM views WHERE entity_id = '".strip_tags($_article)."' AND entity_type = 'article'");
+			$_views = $this->_dbx->query("SELECT COUNT(entity_id) AS view_count FROM views WHERE entity_id = '".$this->__sanitize($_article)."' AND entity_type = 'article'");
 			$_views = $_views->fetch_object();
 				return($_views->view_count);
 		}
@@ -406,4 +408,3 @@ function whv_uuid() {
 		mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ) 
 	);
 }
-
