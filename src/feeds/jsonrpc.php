@@ -110,7 +110,7 @@ if(!include_once( implode(DIRECTORY_SEPARATOR, array( dirname(dirname(__FILE__))
 			if ($_mp->valid_api_key($_data->_key)) {
 				$article = $_mp->article_fetch($_data->article_id);
 				
-				if ($article->id) {
+				if ($article->article_id) {
 					$_response = $article;
 				} else {
 					$_response = array(
