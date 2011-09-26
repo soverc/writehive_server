@@ -15,7 +15,7 @@ ini_set('date.timezone', 'America/New_York');
 			$_user = $this->_dbx->query("SELECT id FROM `user` WHERE account_key = '".$this->__sanitize($_key)."'");
 			$_user = $_user->fetch_object();
 			
-			if ($_user->id) {
+			if ($_user->user_id) {
 				return(true);
 			} else {
 				return(false);
@@ -79,7 +79,7 @@ ini_set('date.timezone', 'America/New_York');
 			$_user = $this->_dbx->query("SELECT * FROM `user` WHERE account_key = '{$this->__sanitize($_key)}'");
 			$_user = $_user->fetch_object();
 
-			if ($_user->id) { 
+			if ($_user->user_id) { 
 				return($_user);
 			} else {
 				return(false);
@@ -91,7 +91,7 @@ ini_set('date.timezone', 'America/New_York');
 			$_user = $this->_dbx->query("SELECT * FROM `user` WHERE id = {$this->__sanitize($_id)}");
 			$_user = $_user->fetch_object();
 			
-			if ($_user->id) {
+			if ($_user->user_id) {
 				return($_user);
 			} else {
 				return(false);
@@ -105,7 +105,7 @@ ini_set('date.timezone', 'America/New_York');
 			$_q       .= "FROM `article` a INNER JOIN categories c ON (c.id = a.category_id) ";
             $_q       .= "LEFT JOIN categories d ON (d.id = a.secondcategory_id) ";
 			$_q       .= "LEFT JOIN subcategories s ON (s.id = a.subcategory_id) ";
-			$_q       .= "INNER JOIN `user` u ON (u.id = a.author_id) WHERE ";
+			$_q       .= "INNER JOIN `user` u ON (u.user_id = a.author_id) WHERE ";
 			$_q       .= "a.title LIKE '%{$this->__sanitize($_query['criteria'])}%' OR a.content LIKE '%{$this->__sanitize($_query['criteria'])}%' ";
 			$_q       .= "OR a.description LIKE '%{$this->__sanitize($_query['criteria'])}%' OR ";
 			$_q       .= "a.tag_words LIKE ".((isset($_query['tag_words'])) ? "'%{$this->__sanitize($_query['tag_words'])}%'" : "'%{$this->__sanitize($_query['criteria'])}%'");
@@ -164,7 +164,7 @@ ini_set('date.timezone', 'America/New_York');
 			c.label AS cat_label, 
 			d.label AS secondcat_label, s.label as subcat_label, e.label AS secondsubcat_label 
 			FROM `article` AS a 
-			INNER JOIN `user` AS u ON (u.id = a.author_id) 
+			INNER JOIN `user` AS u ON (u.user_id = a.author_id) 
 			INNER JOIN categories AS c ON (c.id = a.category_id) 
 			LEFT JOIN categories AS d ON (d.id = a.secondcategory_id) 
 			LEFT JOIN subcategories AS s ON (s.id = a.subcategory_id) 
