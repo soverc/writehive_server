@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `article` (
   `secondsubcategory_id` int(255) unsigned default NULL,
   `from_url` varchar(250) default NULL,
   `from_blog` varchar(250) default NULL,
+  `license`  char(30) default 'writehive-sharing-1.0',
   `allow_free` tinyint(1) unsigned default '1',
   `group_id` int(255) unsigned default '0',
   `private` tinyint(1) unsigned default '0',
