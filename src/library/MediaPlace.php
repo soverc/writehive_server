@@ -339,12 +339,12 @@ ini_set('date.timezone', 'America/New_York');
 		
 		private function __sanitize($_string)
 		{
-			return(strip_tags($_string));
+			return(addslashes(strip_tags($_string)));
 		}
 		
 		private function __secure_sanitize($_string)
 		{
-			return(htmlentities($_string));
+			return(addslashes(htmlentities($_string)));
 		}
 		
 		private function __secure_desanitize($_string)
