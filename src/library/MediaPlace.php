@@ -99,7 +99,7 @@ ini_set('date.timezone', 'America/New_York');
 		{
 			$_results  = array();
 			$_q        = "SELECT a.*, c.label AS cat_label, s.label AS subcat_label, u.display_name "; 
-			$_q       .= "FROM articles a INNER JOIN categories c ON (c.id = a.category_id) ";
+			$_q       .= "FROM `article` a INNER JOIN categories c ON (c.id = a.category_id) ";
             $_q       .= "LEFT JOIN categories d ON (d.id = a.secondcategory_id) ";
 			$_q       .= "LEFT JOIN subcategories s ON (s.id = a.subcategory_id) ";
 			$_q       .= "INNER JOIN users u ON (u.id = a.author_id) WHERE ";
@@ -132,10 +132,10 @@ ini_set('date.timezone', 'America/New_York');
 			while ($_article = $_search->fetch_object()) {
                 if ($_article->active) {
                     $_article->content      = $this->__secure_desanitize($_article->content);
-                    $_article->comments     = $this->__article_comments($_article->id);
-                    $_article->syndications = $this->__article_syndications($_article->id);
-                    $_article->purchases    = $this->__article_purchases($_article->id);
-                    $_article->views        = $this->__article_views($_article->id);
+                    $_article->comments     = $this->__article_comments($_article->article_id);
+                    $_article->syndications = $this->__article_syndications($_article->article_id);
+                    $_article->purchases    = $this->__article_purchases($_article->article_id);
+                    $_article->views        = $this->__article_views($_article->article_id);
                     $_results[]             = $_article;
                 }
 			}
@@ -145,7 +145,7 @@ ini_set('date.timezone', 'America/New_York');
 
         public function article_deactivate($_article_id)
         {
-            $_q = "UPDATE `articles` SET `active` = 0 WHERE `id` = {$this->__sanitize($_article_id)}";
+            $_q = "UPDATE `article` SET `active` = 0 WHERE `id` = {$this->__sanitize($_article_id)}";
 
             if ($this->_dbx->query($_q)) {
                 return true;
@@ -156,14 +156,27 @@ ini_set('date.timezone', 'America/New_York');
 		
 		public function article_fetch($_article_id)
 		{
-			$_article               = $this->_dbx->query('SELECT a.*, u.display_name AS author_name, c.label AS cat_label, d.label AS secondcat_label, s.label as subcat_label, e.label AS secondsubcat_label FROM articles AS a INNER JOIN users AS u ON (u.id = a.author_id) INNER JOIN categories AS c ON (c.id = a.category_id) LEFT JOIN categories AS d ON (d.id = a.secondcategory_id) LEFT JOIN subcategories AS s ON (s.id = a.subcategory_id) LEFT JOIN subcategories AS e ON (e.id = a.secondsubcategory_id) WHERE a.id = '.strip_tags($_article_id));
-			$_article               = $_article->fetch_object();
+			$_sql = 'SELECT a.*, 
+			u.display_name AS author_name, 
+			c.label AS cat_label, 
+			d.label AS secondcat_label, s.label as subcat_label, e.label AS secondsubcat_label 
+			FROM `article` AS a 
+			INNER JOIN users AS u ON (u.id = a.author_id) 
+			INNER JOIN categories AS c ON (c.id = a.category_id) 
+			LEFT JOIN categories AS d ON (d.id = a.secondcategory_id) 
+			LEFT JOIN subcategories AS s ON (s.id = a.subcategory_id) 
+			LEFT JOIN subcategories AS e ON (e.id = a.secondsubcategory_id) 
+			WHERE a.article_id = \''.$this->__sanitize($_article_id).'\'';
+
+			$_result  = $this->_dbx->query( $_sql );
+			$_article               = $_result->fetch_object();
 			$_article->content      = $this->__secure_desanitize($_article->content);
-			$_article->comments     = $this->__article_comments($_article->id);
-			$_article->syndications = $this->__article_syndications($_article->id);
-			$_article->purchases    = $this->__article_purchases($_article->id);
-			$_article->views        = $this->__article_views($_article->id);
-				return($_article);
+			$_article->comments     = $this->__article_comments($_article->article_id);
+			file_put_contents("/tmp/foo.log", print_r($_article, 1));
+			$_article->syndications = $this->__article_syndications($_article->article_id);
+			$_article->purchases    = $this->__article_purchases($_article->article_id);
+			$_article->views        = $this->__article_views($_article->article_id);
+			return $_article;
 		}
 		
 		public function grab_all_categories()
@@ -203,8 +216,10 @@ ini_set('date.timezone', 'America/New_York');
 		}
 		
 		public function article_post($_data)
-		{	
-			$_sql      = "INSERT INTO articles (
+		{
+			$guid  = whv_uuid();
+			$_sql  = "INSERT INTO `article` (
+				article_id,
 				author_id, 
 				content, 
 				title, 
@@ -223,6 +238,7 @@ ini_set('date.timezone', 'America/New_York');
 				from_url, 
 				allow_free
 			) VALUES (
+				'".$guid."',
 				'{$this->__sanitize($_data->author_id)}', 
 				'{$this->__secure_sanitize($_data->content)}', 
 				'{$this->__sanitize($_data->title)}', 
@@ -243,7 +259,7 @@ ini_set('date.timezone', 'America/New_York');
 			)";
 			
 			if ($this->_dbx->query($_sql)) {
-				return($this->_dbx->insert_id);
+				return $guid;
 			} else {
 				return(false);
 			}
@@ -354,30 +370,40 @@ ini_set('date.timezone', 'America/New_York');
 		
 		private function __article_comments($_article)
 		{
-			$_comments = $this->_dbx->query("SELECT COUNT(id) AS comment_count FROM comments WHERE article_id = ".strip_tags($_article));
+			$_comments = $this->_dbx->query("SELECT COUNT(id) AS comment_count FROM comments WHERE article_id = '".strip_tags($_article)."'");
 			$_comments = $_comments->fetch_object();
 				return($_comments->comment_count);
 		}
 		
 		private function __article_syndications($_article)
 		{
-			$_syndications = $this->_dbx->query("SELECT COUNT(aid) AS syndication_count FROM syndicated WHERE aid = ".strip_tags($_article));
+			$_syndications = $this->_dbx->query("SELECT COUNT(aid) AS syndication_count FROM syndicated WHERE aid = '".strip_tags($_article)."'");
 			$_syndications = $_syndications->fetch_object();
 				return($_syndications->syndication_count);
 		}
 		
 		private function  __article_purchases($_article)
 		{
-			$_purchases = $this->_dbx->query("SELECT COUNT(article_id) AS purchase_count FROM invoices WHERE article_id = ".strip_tags($_article));
+			$_purchases = $this->_dbx->query("SELECT COUNT(article_id) AS purchase_count FROM invoices WHERE article_id = '".strip_tags($_article)."'");
 			$_purchases = $_purchases->fetch_object();  
 				return($_purchases->purchase_count);
 		}
 		
 		private function __article_views($_article)
 		{
-			$_views = $this->_dbx->query("SELECT COUNT(entity_id) AS view_count FROM views WHERE entity_id = ".strip_tags($_article)." AND entity_type = 'article'");
+			$_views = $this->_dbx->query("SELECT COUNT(entity_id) AS view_count FROM views WHERE entity_id = '".strip_tags($_article)."' AND entity_type = 'article'");
 			$_views = $_views->fetch_object();
 				return($_views->view_count);
 		}
 
 	}
+
+function whv_uuid() {
+	return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+		mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+		mt_rand( 0, 0x0fff ) | 0x4000,
+		mt_rand( 0, 0x3fff ) | 0x8000,
+		mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ) 
+	);
+}
+

@@ -1,11 +1,11 @@
 --
--- Table structure for table `articles`
+-- Table structure for table `article`
 --
 
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-CREATE TABLE IF NOT EXISTS `articles` (
-  `id` int(255) unsigned NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `article` (
+  `article_id` CHAR(37) NOT NULL,
   `author_id` int(255) unsigned default NULL,
   `date_created` datetime default NULL,
   `content` longtext,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `tag_words` text,
   `cost` decimal(10,2) unsigned NOT NULL default '0.00',
   `active` tinyint(1) unsigned NOT NULL default '1',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`article_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=60997 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
