@@ -6,7 +6,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE IF NOT EXISTS `article` (
   `article_id` CHAR(37) NOT NULL,
-  `author_id` int(255) unsigned default NULL,
+  `author_id` CHAR(37) NULL default NULL,
   `date_created` datetime default NULL,
   `content` longtext,
   `title` text,
