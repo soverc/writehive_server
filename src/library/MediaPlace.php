@@ -6,13 +6,13 @@ ini_set('date.timezone', 'America/New_York');
 
 		public function __construct()
 		{
-			//$this->_dbx = new mysqli('10.100.100.104', 'mpdb', 'mpFj8*Qm159788', 'mediaplace');
-			$this->_dbx = new mysqli('localhost', 'root', '', 'mediaplace');
+			$this->_dbx = new mysqli('10.100.100.104', 'mpdb', 'mpFj8*Qm159788', 'mediaplace');
+			//$this->_dbx = new mysqli('localhost', 'root', '', 'mediaplace');
 		}
 		
 		public function valid_api_key($_key)
 		{
-			$_user = $this->_dbx->query("SELECT id FROM `user` WHERE account_key = '".$this->__sanitize($_key)."'");
+			$_user = $this->_dbx->query("SELECT user_id FROM `user` WHERE account_key = '".$this->__sanitize($_key)."'");
 			$_user = $_user->fetch_object();
 			
 			if ($_user->user_id) {
@@ -62,8 +62,11 @@ ini_set('date.timezone', 'America/New_York');
 		
 		public function login($_username, $_password)
 		{
-			$_user = $this->_dbx->query("SELECT * FROM `user` WHERE display_name = '{$this->__sanitize($_username)}' AND passwd = PASSWORD('{$this->__sanitize($_password)}')");
+
+			$_userSql = "SELECT * FROM `user` WHERE display_name = '".$this->__sanitize($_username)."' AND passwd = PASSWORD('".$this->__sanitize($_password)."')";
+			$_user = $this->_dbx->query($_userSql);
 			$_user = $_user->fetch_object();
+
 			if (!is_object($_user)) {
 				return FALSE;
 			}
@@ -173,6 +176,7 @@ ini_set('date.timezone', 'America/New_York');
 
 			$_result  = $this->_dbx->query( $_sql );
 			$_article               = $_result->fetch_object();
+
 			$_article->content      = $this->__secure_desanitize($_article->content);
 			$_article->comments     = $this->__article_comments($_article->article_id);
 			$_article->syndications = $this->__article_syndications($_article->article_id);
@@ -243,7 +247,7 @@ ini_set('date.timezone', 'America/New_York');
 				'".$guid."',
 				'{$this->__sanitize($_data->author_id)}', 
 				'{$this->__secure_sanitize($_data->content)}', 
-				'{$this->__sanitize($_data->title)}', 
+				'{$this->__secure_sanitize($_data->title)}', 
 				'{$this->__sanitize($_data->description)}', 
 				'{$this->__sanitize($_data->name)}', 
 				'{$this->__sanitize($_data->category_id)}', 
