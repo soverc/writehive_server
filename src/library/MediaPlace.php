@@ -138,6 +138,8 @@ ini_set('date.timezone', 'America/New_York');
 			while ($_article = $_search->fetch_object()) {
                 if ($_article->active) {
                     $_article->content      = $this->__secure_desanitize($_article->content);
+		    //secure preview
+		    $_article->content      = nl2br( substr( trim( strip_tags( $_article->content ) ), 0, 1000));
                     $_article->comments     = $this->__article_comments($_article->article_id);
                     $_article->syndications = $this->__article_syndications($_article->article_id);
                     $_article->purchases    = $this->__article_purchases($_article->article_id);
