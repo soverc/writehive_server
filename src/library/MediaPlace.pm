@@ -38,7 +38,7 @@ use Net::SMTP_auth;
 our($_sql) = mpSql->new;
 
 	# Connect to the MySQL Server
- 	$_sql->connect('mysql', '10.179.168.196', 'mpdb', 'mpFj8*Qm159788', 'mediaplace');
+ 	$_sql->connect('mysql', '10.100.100.104', 'mpdb', 'mpFj8*Qm159788', 'mediaplace');
 
 # Declare global BBCode
 my($_bbc) = mpBBCode->new;
@@ -101,7 +101,7 @@ sub user_create
 	my($_self, $_usrdata) = @_;
 	
 	if ($_sql->insert('user', \%{$_usrdata})) {
-		my($_newuser) = $_sql->query("SELECT user_id FROM user WHERE display_name = '".$_usrdata->{'display_name'}."'");
+		my($_newuser) = $_sql->query("SELECT user_id FROM `user` WHERE display_name = '".$_usrdata->{'display_name'}."'");
 			return(@$_newuser[0]->{'user_id'});
 	} else {
 		return(0);
@@ -112,7 +112,7 @@ sub user_create
 sub user_update
 {
 	my($_self, $_userdata, $_id) = @_;
-	my(@_args)                   = ('user_id = "'.$_id.'"');
+	my(@_args)                   = ('user_id = '.$_id);
 	
 	if ($_sql->update('user', \%{$_userdata}, \@_args, undef)) {
 		return(1);
@@ -147,7 +147,7 @@ sub existing_users
 sub user_login
 {
 	my($_self, $_username, $_passwd)  = @_;
-	my(@_fields)                      = ('id');
+	my(@_fields)                      = ('user_id');
 	my(@_args)                        = ("display_name = '".$_username."'", "passwd = PASSWORD('".$_passwd."')", "active = '1'");
 	my($_users)                       = $_sql->select('user', \@_fields, \@_args, undef);
 	
@@ -166,19 +166,19 @@ sub user_retrieve
 	
 	if (defined($_uid)) {
 		my(@_fields) = ('*');
-		my(@_args) = ("id = ".$_uid);
-		my($_user) = $_sql->select('users', \@_fields, \@_args, undef);
+		my(@_args) = ("user_id = ".$_uid);
+		my($_user) = $_sql->select('user', \@_fields, \@_args, undef);
 		
 		if (scalar(@$_user)) {
-			my($_revenue)      = $_sql->query("SELECT SUM(`amount`) AS `total_revenue` FROM `invoices` WHERE `author_id` = ".@$_user[0]->{'id'}." AND `invoice_type` = 'article'");
+#			my($_revenue)      = $_sql->query("SELECT SUM(`amount`) AS `total_revenue` FROM `invoices` WHERE `author_id` = ".@$_user[0]->{'id'}." AND `invoice_type` = 'article'");
 			my($_articles)     = $_sql->query("SELECT COUNT(`id`) AS `total_articles` FROM `articles` WHERE `author_id` = ".@$_user[0]->{'id'});
 			my($_comments)     = $_sql->query("SELECT COUNT(`id`) AS `total_comments` FROM `comments` WHERE `author_email` = '".@$_user[0]->{'email_address'}."'");
 			my($_syndications) = $_sql->query("SELECT COUNT(`uid`) AS `total_syndications` FROM `syndicated` WHERE `uid` = ".@$_user[0]->{'id'});
 			
-			if (@$_revenue[0]->{'total_revenue'}) {
-				@$_user[0]->{'revenue'} = (@$_revenue[0]->{'total_revenue'} * 0.90);
-			} else {
-				@$_user[0]->{'revenue'} = 0.00;
+#			if (@$_revenue[0]->{'total_revenue'}) {
+#				@$_user[0]->{'revenue'} = (@$_revenue[0]->{'total_revenue'} * 0.90);
+#			} else {
+#				@$_user[0]->{'revenue'} = 0.00;
 			}
 			
 			@$_user[0]->{'articles'}      = @$_articles[0]->{'total_articles'};
@@ -219,19 +219,19 @@ sub user_retrieve_public_profile
 			'display_pic'
 		);
 		my(@_args) = ("display_name = '".$_uid."'");
-		my($_user) = $_sql->select('users', \@_fields, \@_args, undef);
+		my($_user) = $_sql->select('user', \@_fields, \@_args, undef);
 		
 		if (scalar(@$_user)) {
-			my($_revenue)      = $_sql->query("SELECT SUM(`amount`) AS total_revenue` FROM `invoices` WHERE `author_id` = ".@$_user[0]->{'id'}." AND `invoice_type` = 'article'");
+#			my($_revenue)      = $_sql->query("SELECT SUM(`amount`) AS total_revenue FROM `invoices` WHERE `author_id` = ".@$_user[0]->{'id'}." AND `invoice_type` = 'article'");
 			my($_articles)     = $_sql->query("SELECT * FROM `articles` WHERE `author_id` = ".@$_user[0]->{'id'});
 			my($_comments)     = $_sql->query("SELECT * FROM `comments` WHERE `author_email` = '".@$_user[0]->{'email_address'}."'");
 			my($_syndications) = $_sql->query("SELECT * FROM `syndicated` WHERE `uid` = ".@$_user[0]->{'id'});
 			
-			if (@$_user[0]->{'founders_club_id'} == 0) {
-				@$_user[0]->{'revenue'} = (@$_revenue[0]->{'total_revenue'} * 0.70);
-			} else {
-				@$_user[0]->{'revenue'} = (@$_revenue[0]->{'total_revenue'} * 0.90);
-			}
+#			if (@$_user[0]->{'founders_club_id'} == 0) {
+#				@$_user[0]->{'revenue'} = (@$_revenue[0]->{'total_revenue'} * 0.70);
+#			} else {
+#				@$_user[0]->{'revenue'} = (@$_revenue[0]->{'total_revenue'} * 0.90);
+#			}
 			
 			@$_user[0]->{'articles'}      = scalar(@$_articles);
 			@$_user[0]->{'comments'}      = scalar(@$_comments);
@@ -374,7 +374,7 @@ sub article_delete
 sub article_fetch
 {
 	my($_self, $_aid) = @_;
-	my($_article)     = $_sql->query('SELECT a.*, u.display_name AS author_name, c.label AS cat_label, t.label AS secondcat_label FROM articles a INNER JOIN users u ON (u.id = a.author_id) INNER JOIN categories c ON (c.id = a.category_id) INNER JOIN categories t ON (t.id = a.secondcategory_id) WHERE a.id = '.$_sql->quote($_aid));
+	my($_article)     = $_sql->query('SELECT a.*, u.display_name AS author_name, c.label AS cat_label, t.label AS secondcat_label FROM articles a INNER JOIN user u ON (u.id = a.author_id) INNER JOIN categories c ON (c.id = a.category_id) INNER JOIN categories t ON (t.id = a.secondcategory_id) WHERE a.id = '.$_sql->quote($_aid));
 	
 	if (scalar(@$_article) == 1) {
 		return(@$_article[0]);
@@ -387,7 +387,7 @@ sub article_fetch
 sub article_fetch_by_body
 {
 	my($_self, $_content) = @_;
-	my($_article)         = $_sql->query("SELECT id FROM articles WHERE content = ".$_sql->quote($_content));
+	my($_article)         = $_sql->query("SELECT article_id FROM articles WHERE content = ".$_sql->quote($_content));
 	
 	if (scalar(@$_article) == 1) {
 		return(@$_article[0]->{'id'});
@@ -400,7 +400,7 @@ sub article_fetch_by_body
 sub article_search
 {
 	my($_self, $_query) = @_;
-	my($_q) = 'SELECT a.*, c.label AS cat_label, d.label AS secondcat_label, s.label AS subcat_label, t.label AS secondsubcat_label, u.display_name FROM articles a LEFT JOIN categories c ON (c.id = a.category_id) LEFT JOIN categories d ON (d.id = a.secondcategory_id) LEFT JOIN subcategories s ON (s.id = a.subcategory_id) LEFT JOIN subcategories t ON (t.id = a.secondsubcategory_id) INNER JOIN users u ON (u.id = a.author_id) WHERE a.title LIKE '.$_sql->quote('%'.$_query->{criteria}.'%').' OR a.content LIKE '.$_sql->quote('%'.$_query->{criteria}.'%').' OR a.description LIKE '.$_sql->quote('%'.$_query->{criteria}.'%').' OR a.tag_words LIKE '.((defined($_query->{tag_words})) ? $_sql->quote('%'.$_query->{tag_words}.'%') : $_sql->quote('%'.$_query->{criteria}.'%'));
+	my($_q) = 'SELECT a.*, c.label AS cat_label, d.label AS secondcat_label, s.label AS subcat_label, t.label AS secondsubcat_label, u.display_name FROM articles a LEFT JOIN categories c ON (c.id = a.category_id) LEFT JOIN categories d ON (d.id = a.secondcategory_id) LEFT JOIN subcategories s ON (s.id = a.subcategory_id) LEFT JOIN subcategories t ON (t.id = a.secondsubcategory_id) INNER JOIN user u ON (u.id = a.author_id) WHERE a.title LIKE '.$_sql->quote('%'.$_query->{criteria}.'%').' OR a.content LIKE '.$_sql->quote('%'.$_query->{criteria}.'%').' OR a.description LIKE '.$_sql->quote('%'.$_query->{criteria}.'%').' OR a.tag_words LIKE '.((defined($_query->{tag_words})) ? $_sql->quote('%'.$_query->{tag_words}.'%') : $_sql->quote('%'.$_query->{criteria}.'%'));
 	
 	if (($_query->{start_date} ne undef) and ($_query->{end_date} ne undef)) {
 		$_q .= ' OR (a.date_created BETWEEN '.$_sql->quote($_query->{start_date}).' AND '.$_sql->quote($_query->{end_date}).')';
@@ -494,10 +494,10 @@ sub syndicate_plus_one
 sub feed_articles_posted
 {
 	my($_self, $_key) = @_;
-	my($_uid)         = $_sql->query("SELECT id FROM users WHERE account_key = '".$_key."'");
+	my($_uid)         = $_sql->query("SELECT user_id FROM user WHERE account_key = '".$_key."'");
 	my($_articles)    = $_sql->query(
 		"SELECT a.*, c.label AS category, s.label AS secondcategory, u.display_name FROM articles a INNER JOIN categories c ON (c.id = a.category_id) INNER JOIN categories s ON (s.id = a.secondcategory_id) ".
-		"INNER JOIN users u ON (u.id = a.author_id) WHERE author_id = '".@$_uid[0]->{'id'}."'"
+		"INNER JOIN user u ON (u.user_id = a.author_id) WHERE author_id = '".@$_uid[0]->{'id'}."'"
 	);
 		return(\@$_articles);
 }
@@ -507,7 +507,7 @@ sub feed_article_for_syndication
 	my($_self, $_articleId) = @_;
 	my($_article)           = $_sql->query(
 		"SELECT a.*, c.label AS category, s.label AS secondcategory, u.display_name AS author_name FROM articles a INNER JOIN categories c ON (c.id = a.category_id) ".
-		"INNER JOIN categories s ON (s.id = a.secondcategory_id) INNER JOIN users u ON (u.id = a.author_id) WHERE ".
+		"INNER JOIN categories s ON (s.id = a.secondcategory_id) INNER JOIN user u ON (u.id = a.author_id) WHERE ".
 		(looks_like_number($_articleId) ? "a.id = $_articleId" : "a.name = '$_articleId'")
 	);
 	
@@ -565,7 +565,7 @@ sub feed_get
 sub valid_api_key
 {
 	my($_self, $_key) = @_;
-	my($_validation)  = $_sql->query("SELECT account_key FROM users WHERE account_key = '".$_key."'");
+	my($_validation)  = $_sql->query("SELECT account_key FROM user WHERE account_key = '".$_key."'");
 	
 	if (scalar(@$_validation) == 1) {
 		return(1);
@@ -643,7 +643,7 @@ sub update_group
 sub group_search
 {
 	my($_self, %_args) = @_;
-	my($_q)            = 'SELECT g.*, u.display_name, c.label as cat_label, s.label as scat_label FROM groups g INNER JOIN users u ON (u.id = creator) INNER JOIN categories c ON (c.id = g.category) INNER JOIN subcategories s ON (s.id = g.subcategory) WHERE ';
+	my($_q)            = 'SELECT g.*, u.display_name, c.label as cat_label, s.label as scat_label FROM groups g INNER JOIN user u ON (u.user_id = creator) INNER JOIN categories c ON (c.id = g.category) INNER JOIN subcategories s ON (s.id = g.subcategory) WHERE ';
 	
 	if (defined($_args{'criteria'})) {
 		$_q .= "name LIKE '%".$_args{'criteria'}."%' OR description LIKE '%".$_args{'criteria'}."%' OR taga LIKE '%".$_args{'criteria'}."%' OR tagb LIKE '%".$_args{'criteria'}."%'";
@@ -689,13 +689,13 @@ sub my_groups
 sub grab_groups
 {
 	my($_self) = shift;
-		return($_sql->query('SELECT g.*, u.display_name FROM groups g INNER JOIN users u ON (u.id = g.creator)'));
+		return($_sql->query('SELECT g.*, u.display_name FROM groups g INNER JOIN user u ON (u.user_id = g.creator)'));
 }
 
 sub grab_groups_for_join
 {
 	my($_self, $_name) = @_;
-		return($_sql->query("SELECT g.*, u.display_name FROM groups g INNER JOIN users u ON (u.id = g.creator) WHERE name LIKE '%".$_name."%' AND listed = 1"));
+		return($_sql->query("SELECT g.*, u.display_name FROM groups g INNER JOIN user u ON (u.user_id = g.creator) WHERE name LIKE '%".$_name."%' AND listed = 1"));
 }
 
 sub grab_group
@@ -715,14 +715,14 @@ sub grab_group_by_name
 sub grab_group_members
 {
 	my($_self, $_gid) = @_;
-	my($_members)     = $_sql->query("SELECT g.*, u.display_name FROM group_members g INNER JOIN users u ON (u.id = g.uid) WHERE gid = ".$_gid);
+	my($_members)     = $_sql->query("SELECT g.*, u.display_name FROM group_members g INNER JOIN user u ON (u.user_id = g.uid) WHERE gid = ".$_gid);
 		return($_members);
 }
 
 sub grab_group_applicants
 {
 	my($_self, $_gid)  = @_;
-	my($_applications) = $_sql->query("SELECT a.*, u.display_name FROM group_applications a INNER JOIN users u ON (u.id = a.uid) WHERE gid = ".$_gid);
+	my($_applications) = $_sql->query("SELECT a.*, u.display_name FROM group_applications a INNER JOIN user u ON (u.user_id = a.uid) WHERE gid = ".$_gid);
 		return($_applications);
 }
 
@@ -740,7 +740,7 @@ sub group_invite
 	}
 	
 	if (defined($_args->{'uid'})) {
-		$_email = $_sql->query("SELECT email_address FROM users WHERE id = '".$_args->{'user'}."'");
+		$_email = $_sql->query("SELECT email_address FROM user WHERE user_id = '".$_args->{'user'}."'");
 		$_email = @$_email[0]->{'email_address'};
 		$_sql->query("INSERT INTO group_invites (token, gid, uid, used, created) VALUES ('".$_token."', '".$_args->{'group'}."', '".$_args->{'user'}."', '".$_email."', 0, NOW())");
 	} else {
