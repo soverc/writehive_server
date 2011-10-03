@@ -13,8 +13,10 @@ if (function_exists('date_default_timezone_set')) {
 header('Content-type: application/json'); 
 
 if(!include_once( implode(DIRECTORY_SEPARATOR, array( dirname(dirname(__FILE__)), 'library', 'MediaPlace.php')))) {
+	if(!include_once( implode(DIRECTORY_SEPARATOR, array( dirname(dirname(dirname(__FILE__))), 'library', 'MediaPlace.php')))) {
 	echo json_encode( array('error'=>'unable to open requried libraries'));
 	exit();
+	}
 }
 
 	$_mp       = new MediaPlace();
