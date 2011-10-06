@@ -43,6 +43,7 @@
 	</div>
 
 	<div class="grid_10 prefix_1 suffix_1 alpha omega">
+		<?php Cgn_Template::showSessionMessages();  ?>
 		<?php echo Cgn_Template::parseTemplateSection('content.main'); ?>
 	</div>
 </div> <!-- end class container_12 -->
