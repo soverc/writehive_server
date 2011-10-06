@@ -26,13 +26,24 @@
 		</div>
 
 		<div class="grid_5 prefix_3 omega">
-			<input type="text"     size="12"  name="username">
-				&nbsp;
-			<input type="password" size="12"  name="password">
-				&nbsp;
+	<?php if ($u->isAnonymous() ): ?>
 
-			<input class="color_1" type="button"   value="Sign-In" size="12">
-			
+		<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post">
+
+		<input type="text"     size="12"  name="username">
+			&nbsp;
+		<input type="password" size="12"  name="password">
+			&nbsp;
+
+		<input class="color_1" type="button"   value="Sign-In" size="12">
+		</form>
+		
+		<?php else: ?>
+			<span class="nav_logout">
+			<a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->getDisplayName();?>? Sign-out</a>&nbsp;|&nbsp;
+			<a href="<?=cgn_appurl('account');?>">Account Settings</a>
+			</span>
+		<?php endif; ?>
 		</div>
 	</div>
 
