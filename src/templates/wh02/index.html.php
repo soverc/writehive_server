@@ -16,7 +16,12 @@
 	<div class="grid_12 nav_top">
 
 		<div class="grid_1 prefix_1 alpha">
+
+		<?php if ($u->isAnonymous() ): ?>
 			<a href="<?php echo cgn_url();?>">home</a>
+		<?php else: ?>
+			<a href="<?php echo cgn_sappurl('whv', 'dashboard');?>">home</a>
+		<?php endif; ?>
 		</div>
 		<div class="grid_1">
 			<a href="<?php echo cgn_url();?>blog">blog</a>
@@ -25,17 +30,18 @@
 			<a href="<?php echo cgn_url();?>main.page/about_us.html">about</a>
 		</div>
 
+
 		<div class="grid_5 prefix_3 omega">
 	<?php if ($u->isAnonymous() ): ?>
 
 		<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post">
 
-		<input type="text"     size="12"  name="username">
+		<input type="text"     size="12"  name="email">
 			&nbsp;
 		<input type="password" size="12"  name="password">
 			&nbsp;
 
-		<input class="color_1" type="button"   value="Sign-In" size="12">
+		<input class="color_1" type="submit"   value="Sign-In" size="12">
 		</form>
 		
 		<?php else: ?>
