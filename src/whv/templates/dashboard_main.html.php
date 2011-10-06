@@ -4,10 +4,10 @@
 <div style="border:1px solid black;padding:7px;">
 <div class="acct-sect-hdr" style="font-size:140%;">WordPress Plugin</div>
 	<span style="float:left;width:8.5em;">Link:</span>
-	<span style="font-weight:bold;"><a href="#">filename-x.y.z.zip</a></span>
+	<span style="font-weight:bold;"><a href="<?php echo cgn_url().$t['filename'];?>"><?php echo $t['filename'];?></a></span>
 <br style="clear:both;"/>
 	<span style="float:left;width:8.5em;clear:left;">Release date:</span> 
-	<span style=""><?php echo date('r');?></span>
+	<span style=""><?php echo date('l, F jS Y G:i:s', $t['filemtime']);?></span>
 <br style="clear:both;"/>
 </div>
 
