@@ -15,13 +15,13 @@
 <div class="container_12" id="site_wrapper">
 	<div class="grid_12 nav_top">
 	<div class="grid_1 prefix_1 alpha">
-		<a href="<?php cgn_url();?>">home</a>
+		<a href="<?php echo cgn_url();?>">home</a>
 	</div>
 	<div class="grid_1">
-		<a href="<?php cgn_url();?>blog">blog</a>
+		<a href="<?php echo cgn_url();?>blog">blog</a>
 	</div>
 	<div class="grid_1">
-		<a href="<?php cgn_url();?>">about</a>
+		<a href="<?php echo cgn_url();?>main.page/about_us.html">about</a>
 	</div>
 
 	<div class="grid_5 prefix_3 omega">
@@ -175,14 +175,16 @@
 		<div class="btmnav">
 			<ul>
 				<li><a href="<?php echo cgn_url();?>">Home</a></li>
-				<li><a href="/about.pl">About Us</a></li>
+				<li><a href="/main.page/about_us.html">About Us</a></li>
 				<li><a href="/login.register">Sign-Up</a></li>
 				<li><a href="/main.page/syndication_questions.html">FAQ</a></li>
-				<li><a href="/forums">Forums</a></li>
-				<li><a href="/privacy">Privacy</a></li>
-				<li><a href="http://support.writecrowd.com/">Contact</a></li>
-				<li><a href="/termsconditions.pl">Terms &amp; Conditions</a></li>
-
+				<li>
+					<a href="<?php echo cgn_url();?>main.page/privacy.html">Privacy</a>
+				</li>
+				<li><a href="http://support.writehive.com/">Contact</a></li>
+				<li>
+					<a href="<?php echo cgn_url();?>main.page/terms_conditions.html">Terms &amp; Conditions</a>
+				</li>
 			</ul> 
 		</div>
 		<div class="rights">&copy;2011 WriteCrowd. All rights reserved.</div>	
