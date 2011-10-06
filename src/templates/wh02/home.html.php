@@ -160,7 +160,7 @@
 <dt class=""><label for="web_site">Where is your Web site or blog?</label></dt>
 	<dd class=""><input type="text" name="web_site" id="web_site" size="30" value="" /></dd>
 </dl><div class="form-button-container">
-<button class="form-button form-submit" type="submit" name="reg_form_submit">Save</button>&nbsp;&nbsp;<button class="form-button form-cancel" type="button" name="reg_form_cancel" onclick="javascript:history.go(-1);">Cancel</button>
+<button class="form-button form-submit" type="submit" name="reg_form_submit">Sign-up</button>
 </div>
 <input type="hidden" name="event" id="event" value="save"/></form></div></div>
 
