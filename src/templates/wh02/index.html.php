@@ -38,7 +38,7 @@
 		<div class="grid_4 prefix_2 omega nav_login" style="float:right;">
 		<?php if ($u->isAnonymous() ): ?>
 
-			<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post">
+			<form action="<?php echo cgn_sappurl('login', 'main', 'login');?>" method="post">
 
 			<input type="text"     size="12"  name="email">
 				&nbsp;

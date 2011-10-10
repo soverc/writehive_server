@@ -36,7 +36,7 @@
 		<div class="grid_4 prefix_2 omega nav_login" style="float:right;">
 		<?php if ($u->isAnonymous() ): ?>
 
-			<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post" style="width:100%;">
+			<form action="<?php echo cgn_sappurl('login', 'main', 'login');?>" method="post" style="width:100%;">
 
 			<input type="text"     size="12"  name="email">
 				&nbsp;
@@ -212,7 +212,7 @@
 				<div class="form-wrapper reg_form" style="width:100%;">
 <span class="form-title">Register to Get the Plugin <img src="<?php cgn_templateurl();?>images/wordpress-logo-notext-rgb.png" height="36" valign="middle"/></span>
 <div class="form-container reg_form">
-<form class="form-form" method="POST" name="reg_form" id="reg_form" action="http://hayley.metrofindings.com:8090/login.register.save/" >
+<form class="form-form" method="POST" name="reg_form" id="reg_form" action="<?php echo cgn_sappurl('login', 'register', 'save');?>" >
 <dl><dt class="first form_req"><label for="email">Email</label></dt>
 	<dd class="first form_req"><input type="text" name="email" id="email" size="30" value="" /></dd>
 <dt class="form_req"><label for="password">Password</label></dt>
