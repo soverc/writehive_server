@@ -14,53 +14,115 @@
 <body>
 <div class="container_12" id="site_wrapper">
 	<div class="grid_12 nav_top">
-	<div class="grid_1 prefix_1 alpha">
+		<div class="grid_1 prefix_1 alpha">
+			<?php if ($u->isAnonymous() ): ?>
+				<a href="<?php echo cgn_url();?>">home</a>
+			<?php else: ?>
+				<a href="<?php echo cgn_sappurl('whv', 'dashboard');?>">home</a>
+			<?php endif; ?>
+
+		</div>
+		<div class="grid_1">
+			<a href="<?php echo cgn_url();?>blog">blog</a>
+		</div>
+		<div class="grid_1">
+			<a href="<?php echo cgn_url();?>main.page/about_us.html">about</a>
+		</div>
+		<div class="grid_1">
+			&nbsp;
+		</div>
+
+
+		<div class="grid_4 prefix_2 omega nav_login" style="float:right;">
 		<?php if ($u->isAnonymous() ): ?>
-			<a href="<?php echo cgn_url();?>">home</a>
-		<?php else: ?>
-			<a href="<?php echo cgn_sappurl('whv', 'dashboard');?>">home</a>
-		<?php endif; ?>
 
-	</div>
-	<div class="grid_1">
-		<a href="<?php echo cgn_url();?>blog">blog</a>
-	</div>
-	<div class="grid_1">
-		<a href="<?php echo cgn_url();?>main.page/about_us.html">about</a>
-	</div>
+			<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post" style="width:100%;">
 
-	<div class="grid_5 prefix_3 omega">
-	<?php if ($u->isAnonymous() ): ?>
+			<input type="text"     size="12"  name="email">
+				&nbsp;
+			<input type="password" size="12"  name="password">
+				&nbsp;
 
-		<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post">
+			<input class="color_1" type="submit"   value="Sign-In" size="12">
+			</form>
+			
+			<?php else: ?>
+				<span class="nav_logout">
+				<a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->getDisplayName();?>? Sign-out</a>&nbsp;|&nbsp;
+				<a href="<?=cgn_appurl('account');?>">Account Settings</a>
+				</span>
+			<?php endif; ?>
 
-		<input type="text"     size="12"  name="email">
-			&nbsp;
-		<input type="password" size="12"  name="password">
-			&nbsp;
+		</div>
+		</div>
 
-		<input class="color_1" type="submit"   value="Sign-In" size="12">
-		</form>
-		
-		<?php else: ?>
-			<span class="nav_logout">
-			<a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->getDisplayName();?>? Sign-out</a>&nbsp;|&nbsp;
-			<a href="<?=cgn_appurl('account');?>">Account Settings</a>
+		<div class="grid_12 logo_banner alpha omega">
+			<div class="grid_2 prefix_1 alpha">
+				<img src="<?php echo cgn_templateurl();?>images/writehive_logo_sm2.png"/>
+			</div>
+			<div class="grid_2 prefix_6">
+				<input class="color_2" type="button"   value="Get the Plugin" size="12" style="margin-top:1em;" onclick="document.location = '#signup';">
+			</div>
+		</div>
+
+
+
+
+	<div class="grid_12 omega logo_center">
+	<div class="roundedcornr_box_759553">
+		<div class="roundedcornr_top_759553"><div class="roundedcornr_sub_759553"></div></div>
+		<div class="roundedcornr_content_759553">
+
+		<div class="grid_5 alpha" style="margin-top:10px;margin-left:40px;">
+			<div class="">
+			<span style="font-weight:bold;">
+			The Community that</span>
+
+			<br/>
+			<span style="font-weight:bold;">
+			Empowers Content</span>
+			</div>
+
+			<br/>
+			<span style="font-size:14pt;line-height:18pt;">
+			At WriteHive we beleive that sharing your work should be easy and that discovering great content should be just as easy.
+			<br/>
 			</span>
-		<?php endif; ?>
-
-	</div>
-	</div>
-
-	<div class="grid_12 logo_banner alpha omega">
-		<div class="grid_2 prefix_1 alpha">
-			<img src="<?php echo cgn_templateurl();?>images/writehive_logo_sm.png"/>
 		</div>
-		<div class="grid_2 prefix_6">
-			<input class="color_2" type="button"   value="Get the Plugin" size="12" style="margin-top:1em;" onclick="document.location = '#signup';">
+
+		<div class="grid_6 omega" style="margin-top:-50px;">
+
+			<div style="height: 300px; width: 480px; border:1px solid #333;">
+				<object style="height: 300px; width: 480px">
+				    
+				<param name="movie" value="http://www.youtube.com/v/sXCip7UWvFg?version=3">
+				    
+				<param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always">
+
+				<embed src="http://www.youtube.com/v/sXCip7UWvFg?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" 
+				width="480" height="300">
+
+				</object>
+
+			</div>
+
 		</div>
+
+
+
+
+<!--
+		<div style="clear:left;"></div>
+-->
+		</div>
+
+		<div class="roundedcornr_bottom_759553"><div class="roundedcornr_sub_759553"></div></div>
 	</div>
 
+
+	</div>
+
+<!--
  	<div class="grid_12 omega logo_center">
 		<div class="grid_5 alpha" style="margin-top:10px;margin-left:40px;">
 			<div class="">
@@ -99,6 +161,7 @@
 
 
 	</div>
+-->
 
  	<div class="grid_12 alpha content_boxes">
 		<br/>
@@ -204,7 +267,7 @@
 				</li>
 			</ul> 
 		</div>
-		<div class="rights">&copy;2011 WriteCrowd. All rights reserved.</div>	
+		<div class="rights">&copy;2011 WriteHive. All rights reserved.</div>	
 	</div>
 
 </div> <!-- end class container_12 -->

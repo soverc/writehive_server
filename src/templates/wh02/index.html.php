@@ -29,20 +29,24 @@
 		<div class="grid_1">
 			<a href="<?php echo cgn_url();?>main.page/about_us.html">about</a>
 		</div>
-
-
-		<div class="grid_5 prefix_3 omega">
-	<?php if ($u->isAnonymous() ): ?>
-
-		<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post">
-
-		<input type="text"     size="12"  name="email">
+		<div class="grid_1">
 			&nbsp;
-		<input type="password" size="12"  name="password">
-			&nbsp;
+		</div>
 
-		<input class="color_1" type="submit"   value="Sign-In" size="12">
-		</form>
+
+
+		<div class="grid_4 prefix_2 omega nav_login" style="float:right;">
+		<?php if ($u->isAnonymous() ): ?>
+
+			<form action="<?php echo cgn_appurl('login', 'main', 'login');?>" method="post">
+
+			<input type="text"     size="12"  name="email">
+				&nbsp;
+			<input type="password" size="12"  name="password">
+				&nbsp;
+
+			<input class="color_1" type="submit"   value="Sign-In" size="12">
+			</form>
 		
 		<?php else: ?>
 			<span class="nav_logout">
@@ -83,7 +87,7 @@
 				</li>
 			</ul> 
 		</div>
-		<div class="rights">&copy;2011 WriteCrowd. All rights reserved.</div>	
+		<div class="rights">&copy;2011 WriteHive. All rights reserved.</div>	
 	</div>
 
 </div> <!-- end class container_12 -->
