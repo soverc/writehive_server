@@ -68,6 +68,11 @@ class Whv_Reg {
 		$req = Cgn_SystemRequest::getCurrentRequest();
 		$pw  = $signal->_sourceObj->regPw;
 
+		$uname = $this->regUsername;
+		if ($uname == '') {
+			return FALSE;
+		}
+
 		Cgn_DbWrapper::whenUsing('user', Cgn_Db_Connector::getHandle('mediaplace'));
 		$item = new Cgn_DataItem('user', NULL);
 		$item->set('user_id', cgn_uuid());
@@ -78,7 +83,7 @@ class Whv_Reg {
 			substr($accountKey, 3, 3),
 			substr($accountKey, 6, 3)
 		));
-		$item->set('display_name', $req->cleanString('username'));
+		$item->set('display_name', $uname);
 		$item->set('passwd', $pw);
 		$item->set('active', 0);
 		$saved =  $item->save();
