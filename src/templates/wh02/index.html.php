@@ -71,7 +71,7 @@
 	<!-- end id site_wrapper -->
 
 <div class="container_12">
-	<div class="grid_12 alpha omega" id="site_footer">
+	<div class="grid_10 prefix_1 suffix_1 alpha omega" id="site_footer">
 		<div class="btmnav">
 			<ul>
 				<li><a href="<?php echo cgn_url();?>">Home</a></li>

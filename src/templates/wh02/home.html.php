@@ -200,7 +200,7 @@
 
 	<div class="clear"></div>
 
-	<div class="grid_8 prefix_2 suffix_2 content_front_form">
+	<div class="grid_8 prefix_2 suffix_2 alpha omega content_front_form">
 
 
 <a name="signup"></a>
@@ -246,7 +246,7 @@
 	<!-- end id site_wrapper -->
 
 <div class="container_12">
-	<div class="grid_12 alpha omega" id="site_footer">
+	<div class="grid_10 prefix_1 suffix_1 alpha omega" id="site_footer">
 		<div class="btmnav">
 			<ul>
 				<li><a href="<?php echo cgn_url();?>">Home</a></li>
