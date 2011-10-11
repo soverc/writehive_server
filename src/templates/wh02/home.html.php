@@ -103,17 +103,10 @@
 				width="480" height="300">
 
 				</object>
-
 			</div>
-
 		</div>
 
 
-
-
-<!--
-		<div style="clear:left;"></div>
--->
 		</div>
 
 		<div class="roundedcornr_bottom_759553"><div class="roundedcornr_sub_759553"></div></div>
@@ -164,7 +157,9 @@
 -->
 
  	<div class="grid_12 alpha content_boxes">
-		<br/>
+		<div class="grid_2 prefix_8">
+		<a href="#signup">Get the Plugin</a>
+		</div>
 	</div>
 
  	<div class="grid_12 alpha content_boxes">
@@ -210,7 +205,7 @@
 
 <a name="signup"></a>
 				<div class="form-wrapper reg_form" style="width:100%;">
-<span class="form-title">Register to Get the Plugin <img src="<?php cgn_templateurl();?>images/wordpress-logo-notext-rgb.png" height="36" valign="middle"/></span>
+<span class="form-title">Register to Get the WordPress Plugin <img src="<?php cgn_templateurl();?>images/wordpress-logo-notext-rgb.png" height="36" valign="middle"/></span>
 <div class="form-container reg_form">
 <form class="form-form" method="POST" name="reg_form" id="reg_form" action="<?php echo cgn_sappurl('login', 'register', 'save');?>" >
 <dl><dt class="first form_req"><label for="email">Email</label></dt>
