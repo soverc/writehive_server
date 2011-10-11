@@ -95,11 +95,11 @@
 			<div style="height: 300px; width: 480px; border:1px solid #333;">
 				<object style="height: 300px; width: 480px">
 				    
-				<param name="movie" value="http://www.youtube.com/v/sXCip7UWvFg?version=3">
+				<param name="movie" value="https://www.youtube.com/v/sXCip7UWvFg?version=3">
 				    
 				<param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always">
 
-				<embed src="http://www.youtube.com/v/sXCip7UWvFg?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" 
+				<embed src="https://www.youtube.com/v/sXCip7UWvFg?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" 
 				width="480" height="300">
 
 				</object>
@@ -139,11 +139,11 @@
 			<div style="height: 300px; width: 480px; border:1px solid #333;">
 	<object style="height: 300px; width: 480px">
 	    
-	<param name="movie" value="http://www.youtube.com/v/sXCip7UWvFg?version=3">
+	<param name="movie" value="https://www.youtube.com/v/sXCip7UWvFg?version=3">
 	    
 	<param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always">
 
-	<embed src="http://www.youtube.com/v/sXCip7UWvFg?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" 
+	<embed src="https://www.youtube.com/v/sXCip7UWvFg?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" 
 	width="480" height="300">
 
 	</object>
