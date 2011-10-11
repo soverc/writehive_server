@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="container_12" id="site_wrapper">
-	<div class="grid_12 nav_top">
+	<div class="grid_12 nav_top alpha">
 		<div class="grid_1 prefix_1 alpha">
 			<?php if ($u->isAnonymous() ): ?>
 				<a href="<?php echo cgn_url();?>">home</a>
