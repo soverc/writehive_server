@@ -59,7 +59,7 @@
 
 	<div class="grid_12 logo_banner alpha omega">
 		<div class="grid_2 prefix_1 alpha">
-			<img src="<?php echo cgn_templateurl();?>images/writehive_logo_sm.png"/>
+			<img src="<?php echo cgn_templateurl();?>images/writehive_logo_sm2.png"/>
 		</div>
 	</div>
 
