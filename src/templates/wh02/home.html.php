@@ -68,7 +68,7 @@
 
 
 
-	<div class="grid_12 omega logo_center">
+	<div class="grid_12 alpha omega logo_center">
 	<div class="roundedcornr_box_759553">
 		<div class="roundedcornr_top_759553"><div class="roundedcornr_sub_759553"></div></div>
 		<div class="roundedcornr_content_759553">
@@ -116,7 +116,7 @@
 	</div>
 
 <!--
- 	<div class="grid_12 omega logo_center">
+ 	<div class="grid_12 alpha omega logo_center">
 		<div class="grid_5 alpha" style="margin-top:10px;margin-left:40px;">
 			<div class="">
 			<span style="font-weight:bold;">
@@ -156,13 +156,13 @@
 	</div>
 -->
 
- 	<div class="grid_12 alpha content_boxes">
+ 	<div class="grid_12 alpha omega content_boxes">
 		<div class="grid_2 prefix_8">
 		<a href="#signup">Get the Plugin</a>
 		</div>
 	</div>
 
- 	<div class="grid_12 alpha content_boxes">
+ 	<div class="grid_12 alpha omega content_boxes">
 		<div class="grid_2 prefix_2">
 			<span class="hdr">Worry Free</span>
 			<br/>
