@@ -272,5 +272,6 @@
 
 </div> <!-- end class container_12 -->
 
+<?php Cgn_Template::parseTemplateSection('footer.track'); ?>
 </body>
 </head>
