@@ -151,17 +151,25 @@ ini_set('date.timezone', 'America/New_York');
 			return($_results);
 		}
 
-        public function article_deactivate($_article_id)
-        {
-            $_q = "UPDATE `article` SET `active` = 0 WHERE `id` = {$this->__sanitize($_article_id)}";
+		public function article_deactivate($_article_id, $_author_key=NULL)
+		{
+			$_q = "SELECT `user_id` from `user`  WHERE `account_key` = '".$this->__sanitize($_author_key)."' ";
+			$_result = $this->_dbx->query($_q);
+			if (!$_result) {
+				return false;
+			}
+			$_user   = $_result->fetch_object();
+			$_user_id = $_user->user_id;
 
-            if ($this->_dbx->query($_q)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-		
+			$_q = "UPDATE `article` SET `active` = 0 WHERE `article_id` = '{$this->__sanitize($_article_id)}' AND  `author_id` = '{$this->__sanitize($_user_id)}'";
+
+			if ($this->_dbx->query($_q)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		public function article_fetch($_article_id)
 		{
 			$_sql = 'SELECT a.*, 

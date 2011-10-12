@@ -194,7 +194,7 @@ if(!include_once( implode(DIRECTORY_SEPARATOR, array( dirname(dirname(__FILE__))
     # Deactivate article
     case 'deactivate_article' :
 	if ($_mp->valid_api_key($_data->_key)) {
-	    if ($_mp->article_deactivate($_data->article_id) === true) {
+	    if ($_mp->article_deactivate($_data->article_id, $_data->_key) === true) {
 		$_response = array(
 		    'success' => true
 		);
