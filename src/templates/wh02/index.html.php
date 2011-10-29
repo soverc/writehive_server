@@ -36,7 +36,7 @@
 
 
 
-		<div class="grid_5 prefix_1 omega nav_login" style="float:right;">
+		<div class="grid_5 prefix_1 omega nav_login" style="text-align:right; float:right;">
 		<?php if ($u->isAnonymous() ): ?>
 
 			<form action="<?php echo cgn_sappurl('login', 'main', 'login');?>" method="post">
