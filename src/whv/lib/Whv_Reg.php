@@ -45,7 +45,6 @@ class Whv_Reg {
 	}
 
 	public function regSaveBefore($signal) {
-//		var_dump($signal);
 		$req = Cgn_SystemRequest::getCurrentRequest();
 		if ($req->cleanString('username') == '') {
 			return false;
@@ -65,10 +64,12 @@ class Whv_Reg {
 
 	public function regSaveAfter($signal) {
 
-		$req = Cgn_SystemRequest::getCurrentRequest();
-		$pw  = $signal->_sourceObj->regPw;
-
-		$uname = $this->regUsername;
+		$req    = Cgn_SystemRequest::getCurrentRequest();
+		$pw     = $signal->_sourceObj->regPw;
+		if ($pw == NULL) {
+			$pw = $signal->_sourceObj->regPwHash;
+		}
+		$uname  = $signal->_sourceObj->regUsername;
 		if ($uname == '') {
 			return FALSE;
 		}
@@ -83,6 +84,7 @@ class Whv_Reg {
 			substr($accountKey, 3, 3),
 			substr($accountKey, 6, 3)
 		));
+
 		$item->set('display_name', $uname);
 		$item->set('passwd', $pw);
 		$item->set('active', 0);
@@ -114,13 +116,27 @@ class Whv_Reg {
 		return TRUE;
 	}
 
+	public function profilePictureSaveAfter($signal) {
+		$account   = $signal->_sourceObj->account;
+		$username  = $signal->_sourceObj->user->username;
+
+		Cgn_DbWrapper::whenUsing('user', Cgn_Db_Connector::getHandle('mediaplace'));
+		$item = new Cgn_DataItem('user', NULL);
+		$item->_uniqs = array('user_id');
+		if ($item->load( array('display_name="'.$username.'"'))) {
+			$item->set('display_pic', cgn_sappurl('account', 'img').$account->_dataItem->get('cgn_account_id'));
+			$item->save();
+		}
+		return TRUE;
+	}
 
 	public function profileSaveAfter($signal) {
 
 		$attribs   = $signal->_sourceObj->attributes;
-		$firstname = $signal->_sourceObj->firstname;
-		$lastname  = $signal->_sourceObj->lastname;
+		$firstname = $signal->_sourceObj->attributes['firstname'];
+		$lastname  = $signal->_sourceObj->attributes['lastname'];
 		$username  = $signal->_sourceObj->user->username;
+		$account   = $signal->_sourceObj->account;
 
 		Cgn_DbWrapper::whenUsing('user', Cgn_Db_Connector::getHandle('mediaplace'));
 		$item = new Cgn_DataItem('user', NULL);
@@ -132,6 +148,7 @@ class Whv_Reg {
 			$item->set('twitter',    $attribs['tw']);
 			$item->set('facebook',   $attribs['fb']);
 			$item->set('bio',        $attribs['bio']);
+			$item->set('account_id', $account->_dataItem->get('cgn_account_id'));
 			$item->save();
 		}
 		return TRUE;

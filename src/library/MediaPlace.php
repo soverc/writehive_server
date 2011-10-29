@@ -65,7 +65,7 @@ ini_set('date.timezone', 'America/New_York');
 		public function login($_username, $_password)
 		{
 
-			$_userSql = "SELECT * FROM `user` WHERE display_name = '".$this->__sanitize($_username)."' AND passwd = PASSWORD('".$this->__sanitize($_password)."')";
+			$_userSql = "SELECT * FROM `user` WHERE display_name = '".$this->__sanitize($_username)."' AND (passwd = PASSWORD('".addslashes($_password)."') OR passwd = MD5(SHA1('".addslashes($_password)."')))";
 			$_user = $this->_dbx->query($_userSql);
 			$_user = $_user->fetch_object();
 
