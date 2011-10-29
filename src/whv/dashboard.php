@@ -16,7 +16,7 @@ class Cgn_Service_Whv_Dashboard extends Cgn_Service {
 		// as a handler.
 		// an upgrade to the cgn_account_attrib table may result in an
 		// error as tables are only dynamically rebuilt on insert/update
-//		$e = Cgn_ErrorStack::pullError('php');
+		$e = Cgn_ErrorStack::pullError('php');
 
 
 		$t['profile'] = array_merge($address->valuesAsArray(), $t['profile']);
