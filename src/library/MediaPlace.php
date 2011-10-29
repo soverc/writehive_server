@@ -27,13 +27,15 @@ ini_set('date.timezone', 'America/New_York');
 			$_sql = "INSERT INTO json_rpc_log (
 				method, 
 				raw_data, 
+				`key`,
 				ts
 			) VALUES (
 				'{$this->__sanitize($_method)}', 
 				'".$this->_dbx->real_escape_string($_data)."',  
+				'".$this->_dbx->real_escape_string($_data->_key)."',
 				NOW()
 			)";
-			
+
 			if ($this->_dbx->query($_sql)) {
 				return(true);
 			} else {
