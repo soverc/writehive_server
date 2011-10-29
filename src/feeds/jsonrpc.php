@@ -27,7 +27,7 @@ if(!include_once( implode(DIRECTORY_SEPARATOR, array( dirname(dirname(__FILE__))
 	switch($_data->_method) {
 		
 		# Logon Method
-		case 'logon' : 
+		case 'logon' :
 
 			$_user = $_mp->login($_data->username, $_data->passwd);
 			
@@ -90,13 +90,19 @@ if(!include_once( implode(DIRECTORY_SEPARATOR, array( dirname(dirname(__FILE__))
 		
 		# Search Method
 		case 'search' : 
+			$_limit = 60;
+			if (isset($_data->limit)) {
+				$_limit = $_data->limit;
+			}
 			if ($_mp->valid_api_key($_data->_key)) {
 				$query = array(
-					'criteria'    => $_data->criteria, 
+				'criteria'    => $_data->criteria,
+				'limit'       => $_limit,
+				'active'  => 1,
 				 // 'start_date'  => (isset($_data->start_date)  ? null : $_data->start_date),
 				 // 'end_date'    => (isset($_data->end_date)    ? null : $_data->start_date),
-			 // 'category'    => (isset($_data->category)    ? null : $_data->category),
-			 // 'subcategory' => (isset($_data->subcategory) ? null : $_data->subcategory),
+				 // 'category'    => (isset($_data->category)    ? null : $_data->category),
+				 // 'subcategory' => (isset($_data->subcategory) ? null : $_data->subcategory),
 				 // 'tag_words'   => (isset($_data->tag_words)   ? null : $_data->tag_words)
 				);
 				
