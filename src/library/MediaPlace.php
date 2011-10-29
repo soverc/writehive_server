@@ -102,13 +102,13 @@ ini_set('date.timezone', 'America/New_York');
 				return(false);
 			}
 		}
-		
+
 		public function article_search($_query)
 		{
 			$_results  = array();
-			$_q        = "SELECT a.*, c.label AS cat_label, s.label AS subcat_label, u.display_name "; 
+			$_q        = "SELECT a.*, c.label AS cat_label, s.label AS subcat_label, u.display_name, u.display_pic ";
 			$_q       .= "FROM `article` a INNER JOIN categories c ON (c.id = a.category_id) ";
-            $_q       .= "LEFT JOIN categories d ON (d.id = a.secondcategory_id) ";
+			$_q       .= "LEFT JOIN categories d ON (d.id = a.secondcategory_id) ";
 			$_q       .= "LEFT JOIN subcategories s ON (s.id = a.subcategory_id) ";
 			$_q       .= "INNER JOIN `user` u ON (u.user_id = a.author_id) WHERE ";
 			$_q       .= "a.title LIKE '%{$this->__sanitize($_query['criteria'])}%' OR a.content LIKE '%{$this->__sanitize($_query['criteria'])}%' ";
@@ -135,6 +135,16 @@ ini_set('date.timezone', 'America/New_York');
 				$_q .= " AND s.id = {$this->__sanitize($_query['secondcategory'])}";
 			}
 
+			$_q .= ' ORDER BY a.`date_created` DESC ';
+
+			if (isset($_query['limit'])) {
+				$limit = $_query['limit'];
+			} else {
+				$limit = 60;
+			}
+
+			$_q .= ' LIMIT  '.$limit.' ';
+
 			$_search = $this->_dbx->query($_q);
 			
 			while ($_article = $_search->fetch_object()) {
@@ -149,28 +159,28 @@ ini_set('date.timezone', 'America/New_York');
                     $_results[]             = $_article;
                 }
 			}
-			
+
 			return($_results);
 		}
 
-		public function article_deactivate($_article_id, $_author_key=NULL)
-		{
-			$_q = "SELECT `user_id` from `user`  WHERE `account_key` = '".$this->__sanitize($_author_key)."' ";
-			$_result = $this->_dbx->query($_q);
+        public function article_deactivate($_article_id, $_author_key=NULL)
+        {
+            $_q = "SELECT `user_id` from `user`  WHERE `account_key` = '".$this->__sanitize($_author_key)."' ";
+            $_result = $this->_dbx->query($_q);
 			if (!$_result) {
 				return false;
 			}
 			$_user   = $_result->fetch_object();
 			$_user_id = $_user->user_id;
 
-			$_q = "UPDATE `article` SET `active` = 0 WHERE `article_id` = '{$this->__sanitize($_article_id)}' AND  `author_id` = '{$this->__sanitize($_user_id)}'";
+            $_q = "UPDATE `article` SET `active` = 0 WHERE `article_id` = '{$this->__sanitize($_article_id)}' AND  `author_id` = '{$this->__sanitize($_user_id)}'";
 
-			if ($this->_dbx->query($_q)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
+            if ($this->_dbx->query($_q)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
 		public function article_fetch($_article_id)
 		{
@@ -258,10 +268,10 @@ ini_set('date.timezone', 'America/New_York');
 			) VALUES (
 				'".$guid."',
 				'{$this->__sanitize($_data->author_id)}', 
-				'{$this->__secure_sanitize($_data->content)}', 
-				'{$this->__secure_sanitize($_data->title)}', 
-				'{$this->__sanitize($_data->description)}', 
-				'{$this->__sanitize($_data->name)}', 
+				'{$this->__secure_sanitize($_data->content)}',
+				'{$this->__secure_sanitize($_data->title)}',
+				'{$this->__sanitize($_data->description)}',
+				'{$this->__sanitize($_data->name)}',
 				'{$this->__sanitize($_data->category_id)}', 
 				'{$this->__sanitize($_data->secondcategory_id)}', 
 				'{$this->__sanitize($_data->subcategory_id)}', 
