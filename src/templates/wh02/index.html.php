@@ -13,6 +13,7 @@
 </head>
 <body>
 <div class="container_12" id="site_wrapper">
+
 	<div class="grid_12 nav_top alpha">
 
 		<div class="grid_1 prefix_1 alpha">
@@ -35,7 +36,7 @@
 
 
 
-		<div class="grid_4 prefix_2 omega nav_login" style="float:right;">
+		<div class="grid_5 prefix_1 omega nav_login" style="float:right;">
 		<?php if ($u->isAnonymous() ): ?>
 
 			<form action="<?php echo cgn_sappurl('login', 'main', 'login');?>" method="post">

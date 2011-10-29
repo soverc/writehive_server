@@ -13,6 +13,7 @@
 </head>
 <body>
 <div class="container_12" id="site_wrapper">
+
 	<div class="grid_12 nav_top alpha">
 		<div class="grid_1 prefix_1 alpha">
 			<?php if ($u->isAnonymous() ): ?>
@@ -33,7 +34,7 @@
 		</div>
 
 
-		<div class="grid_4 prefix_2 omega nav_login" style="float:right;">
+		<div class="grid_5 prefix_1 omega nav_login" style="float:right;">
 		<?php if ($u->isAnonymous() ): ?>
 
 			<form action="<?php echo cgn_sappurl('login', 'main', 'login');?>" method="post" style="width:100%;">
@@ -85,7 +86,7 @@
 
 			<br/>
 			<span style="font-size:14pt;line-height:18pt;">
-			At WriteHive we beleive that sharing your work should be easy and that discovering great content should be just as easy.
+			At WriteHive we believe that sharing your work should be easy and that discovering great content should be just as easy.
 			<br/>
 			</span>
 		</div>
@@ -163,20 +164,20 @@
 	</div>
 
  	<div class="grid_12 alpha omega content_boxes">
-		<div class="grid_2 prefix_2">
+		<div class="grid_3 alpha">
 			<span class="hdr">Worry Free</span>
 			<br/>
 			Our Plugin removes the possibility that someone 
 			will omit your attribution and backlinks.
 		</div>
-		<div class="grid_2">
+		<div class="grid_3">
 			<span class="hdr">Get Paid</span>
 			<br/>
 			... or not.  Pricing of your content is up to you.
 			Are you looking to get noticed or add 
 			another revenue stream to your online presence?
 		</div>
-		<div class="grid_2">
+		<div class="grid_3">
 			<span class="hdr">We're Listening</span>
 			<br/>
 			We're in a constant dialog with our users to 
@@ -185,7 +186,7 @@
 			noise is our goal.
 			
 		</div>
-		<div class="grid_2 omega">
+		<div class="grid_3 omega">
 			<span class="hdr">It's Easy</span>
 			<br/>
 			The WordPress plugin is simple to install, 
