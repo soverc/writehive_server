@@ -1,0 +1,1 @@
+ALTER TABLE `mediaplace`.`user` ADD COLUMN `account_id` INT UNSIGNED NULL  AFTER `linkedin` , CHANGE COLUMN `display_pic` `display_pic` VARCHAR(200) NULL DEFAULT NULL  ;
