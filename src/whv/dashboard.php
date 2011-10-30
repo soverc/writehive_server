@@ -22,7 +22,7 @@ class Cgn_Service_Whv_Dashboard extends Cgn_Service {
 		$t['profile'] = array_merge($address->valuesAsArray(), $t['profile']);
 		$t['profile'] = array_merge($t['profile'], $account->attributes);
 
-		$t['filename']   = 'writehive_1.0.zip';
+		$t['filename']   = 'writehive_1.0.4.zip';
 		$t['filemtime']  = filemtime( BASE_DIR.'/'.$t['filename']);
 	}
 }
