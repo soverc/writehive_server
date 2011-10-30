@@ -6,7 +6,7 @@ ini_set('date.timezone', 'America/New_York');
 
 		public function __construct()
 		{
-			$this->_dbx = new mysqli('10.100.100.104', 'mpdb', 'mpFj8*Qm159788', 'mediaplace');
+			$this->_dbx = new mysqli('10.179.168.196', 'mpdb', 'mpFj8*Qm159788', 'mediaplace');
 			//$this->_dbx = new mysqli('localhost', 'root', '', 'mediaplace');
 		}
 		
